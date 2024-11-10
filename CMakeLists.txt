@@ -58,21 +58,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tinyfiledialogs)
 
-# Add Nuklear (assuming it's locally included in the project)
-add_library(nuklear STATIC
-    nuklear/nuklear.h
-    nuklear/nuklear_glfw_gl3.h
-)
-
-
-# Add include directories for project headers
-include_directories(
-    include
-    external/cjson  # Add the cJSON include directory
-)
-
 # Add cJSON source file directly to the project
-set(CJSON_SOURCES external/cjson/cJSON.c)
+set(CJSON_SOURCES ${CMAKE_SOURCE_DIR}/external/cjson/cJSON.c)
 
 # Add all other source files from each folder using GLOB_RECURSE
 file(GLOB_RECURSE SOURCES
@@ -87,7 +74,7 @@ file(GLOB_RECURSE SOURCES
 # Include cJSON source file with other sources
 list(APPEND SOURCES ${CJSON_SOURCES})
 
-# Create the executable
+# Define the executable first
 add_executable(StellAI ${SOURCES})
 
 # Link libraries
@@ -97,8 +84,20 @@ target_link_libraries(StellAI
     glew             # Link GLEW
     SOIL2
     assimp           # Linking Assimp for model loading
-    nuklear          # Linking Nuklear for GUI
     tinyfiledialogs  # Linking tinyfiledialogs for file dialogs
+)
+
+# Now specify include directories
+target_include_directories(StellAI PRIVATE 
+    ${CMAKE_BINARY_DIR}/_deps/glad-src/include   # Path to glad headers
+    ${GLFW_INCLUDE_DIRS}
+    ${GLEW_INCLUDE_DIRS}
+    ${SOIL2_INCLUDE_DIRS}
+    ${ASSIMP_INCLUDE_DIRS}
+    ${TINYFILEDIALOGS_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}/include                  # Project's include directory
+    ${CMAKE_SOURCE_DIR}/external/nuklear         # Nuklear as a header-only library
+    ${CMAKE_SOURCE_DIR}/external/cjson           # cJSON include directory
 )
 
 # Platform-specific settings (e.g., Windows, Linux, macOS)
@@ -112,13 +111,3 @@ elseif (APPLE)
 elseif (UNIX)
     target_link_libraries(StellAI GL X11 pthread Xrandr Xi dl)  # Link necessary libraries on Linux
 endif()
-
-# Additional configuration to ensure all libraries are properly linked
-target_include_directories(StellAI PRIVATE 
-    ${GLFW_INCLUDE_DIRS} 
-    ${GLAD_INCLUDE_DIRS} 
-    ${GLEW_INCLUDE_DIRS} 
-    ${SOIL2_INCLUDE_DIRS} 
-    ${ASSIMP_INCLUDE_DIRS} 
-    ${TINYFILEDIALOGS_INCLUDE_DIRS}
-)

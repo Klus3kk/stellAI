@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include "utils/Vectors.h"
 #include "entities/Screen.h"
+#ifdef _WIN32
 #include <Windows.h>
+#endif
 #include "utils/loading.h"
 #include "resources/ModelLoad.h"
 #include "entities/Camera.h"
