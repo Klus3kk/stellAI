@@ -10,9 +10,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Enable FetchContent for downloading external dependencies
 include(FetchContent)
 
-# Disable all uninstall targets to avoid conflicts
-set(CMAKE_SKIP_INSTALL_RULES ON)
-
 # Fetch GLFW
 FetchContent_Declare(
     GLFW
@@ -20,14 +17,6 @@ FetchContent_Declare(
     GIT_TAG latest
 )
 FetchContent_MakeAvailable(GLFW)
-
-# Fetch cJSON for JSON parsing with a specific tag for stability
-FetchContent_Declare(
-    cJSON
-    GIT_REPOSITORY https://github.com/DaveGamble/cJSON.git
-    GIT_TAG v1.7.14  # Use a specific stable tag instead of 'master'
-)
-FetchContent_MakeAvailable(cJSON)
 
 # Fetch GLAD
 FetchContent_Declare(
@@ -75,20 +64,17 @@ add_library(nuklear STATIC
     nuklear/nuklear_glfw_gl3.h
 )
 
-# Add ODE if it’s downloaded locally; otherwise, add a fetch command
-FetchContent_Declare(
-    ODE
-    GIT_REPOSITORY https://github.com/odedevs/ode.git
-    GIT_TAG main
-)
-FetchContent_MakeAvailable(ODE)
 
 # Add include directories for project headers
 include_directories(
     include
+    external/cjson  # Add the cJSON include directory
 )
 
-# Add all source files from each folder using GLOB_RECURSE
+# Add cJSON source file directly to the project
+set(CJSON_SOURCES external/cjson/cJSON.c)
+
+# Add all other source files from each folder using GLOB_RECURSE
 file(GLOB_RECURSE SOURCES
     "src/core/*.c"
     "src/graphics/*.c"
@@ -97,6 +83,9 @@ file(GLOB_RECURSE SOURCES
     "src/entities/*.c"
     "src/utils/*.c"
 )
+
+# Include cJSON source file with other sources
+list(APPEND SOURCES ${CJSON_SOURCES})
 
 # Create the executable
 add_executable(StellAI ${SOURCES})
@@ -107,10 +96,8 @@ target_link_libraries(StellAI
     glad
     glew             # Link GLEW
     SOIL2
-    cjson
     assimp           # Linking Assimp for model loading
     nuklear          # Linking Nuklear for GUI
-    ode              # Linking Open Dynamics Engine for physics
     tinyfiledialogs  # Linking tinyfiledialogs for file dialogs
 )
 
@@ -132,8 +119,6 @@ target_include_directories(StellAI PRIVATE
     ${GLAD_INCLUDE_DIRS} 
     ${GLEW_INCLUDE_DIRS} 
     ${SOIL2_INCLUDE_DIRS} 
-    ${CJSON_INCLUDE_DIRS} 
     ${ASSIMP_INCLUDE_DIRS} 
-    ${ODE_INCLUDE_DIRS} 
     ${TINYFILEDIALOGS_INCLUDE_DIRS}
 )
