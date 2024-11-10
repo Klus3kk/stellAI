@@ -3,14 +3,14 @@
 
 #include <stdbool.h>
 #include <stdio.h>
-#include "Vectors.h"
-#include "Screen.h"
+#include "utils/Vectors.h"
+#include "entities/Screen.h"
 #include <Windows.h>
-#include "loading.h"
-#include "ModelLoad.h"
-#include "Camera.h"
-#include "ObjectManager.h"
-#include "gui.h"
+#include "utils/loading.h"
+#include "resources/ModelLoad.h"
+#include "entities/Camera.h"
+#include "resources/ObjectManager.h"
+#include "gui/gui.h"
 #define MAX_OBJECTS 250
 
 typedef enum {

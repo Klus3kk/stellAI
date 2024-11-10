@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "Vectors.h"
+#include "utils/Vectors.h"
 #include <stdbool.h>
 
 typedef enum {

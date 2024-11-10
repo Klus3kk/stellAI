@@ -1,8 +1,8 @@
-#include "Camera.h"
-#include "globals.h" 
-#include "ObjectManager.h" 
-#include "Vectors.h"
-#include "materials.h" 
+#include "entities/Camera.h"
+#include "core/globals.h" 
+#include "resources/ObjectManager.h" 
+#include "utils/Vectors.h"
+#include "resources/materials.h" 
 #include <GLFW/glfw3.h>
 #include <math.h>
 #include <stdlib.h>

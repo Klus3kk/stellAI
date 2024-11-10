@@ -1,6 +1,6 @@
-#include "gui.h"
-#include "rendering.h"
-#include "globals.h"
+#include "gui/gui.h"
+#include "graphics/rendering.h"
+#include "core/globals.h"
 
 
 int main(void) {

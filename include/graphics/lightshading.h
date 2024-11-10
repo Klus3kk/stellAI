@@ -1,6 +1,6 @@
 #define MAX_LIGHTS 10
 
-#include "Vectors.h"
+#include "utils/Vectors.h"
 
 typedef enum {
     LIGHT_DIRECTIONAL,

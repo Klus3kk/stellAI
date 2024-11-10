@@ -1,5 +1,5 @@
-#include "materials.h"
-#include "textures.h"  
+#include "resources/materials.h"
+#include "resources/textures.h"  
 #include <stdio.h>
 #include <string.h>
 

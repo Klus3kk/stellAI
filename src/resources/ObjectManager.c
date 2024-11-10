@@ -1,12 +1,12 @@
-#include "ObjectManager.h"
-#include "Camera.h"
-#include "globals.h"
-#include "Vectors.h"
-#include "materials.h"
-#include "textures.h"
-#include "gui.h"
-#include "SceneObject.h"
-#include "Object3D.h"
+#include "resources/ObjectManager.h"
+#include "entities/Camera.h"
+#include "core/globals.h"
+#include "utils/Vectors.h"
+#include "resources/materials.h"
+#include "resources/textures.h"
+#include "gui/gui.h"
+#include "entities/SceneObject.h"
+#include "entities/Object3D.h"
 
 ObjectManager objectManager;
 

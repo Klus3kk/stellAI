@@ -2,9 +2,9 @@
 #define RENDERING_H
 
 #include <GLFW/glfw3.h>
-#include "Camera.h" 
-#include "Vectors.h"
-#include "3DObjects.h"
+#include "entities/Camera.h" 
+#include "utils/Vectors.h"
+#include "entities/3DObjects.h"
 
 // Function prototypes
 void setup();

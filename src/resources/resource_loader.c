@@ -1,6 +1,6 @@
-#include "resource_loader.h"
-#include "textures.h"
-#include "materials.h"
+#include "resources/resource_loader.h"
+#include "resources/textures.h"
+#include "resources/materials.h"
 #include <stdio.h>
 
 void load_material() {

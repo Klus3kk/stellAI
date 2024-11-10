@@ -1,4 +1,4 @@
-#include "globals.h"
+#include "core/globals.h"
 
 Screen screen;
 unsigned int shaderProgram;

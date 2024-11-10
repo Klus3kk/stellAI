@@ -1,8 +1,8 @@
 #ifndef SCENE_OBJECT_H
 #define SCENE_OBJECT_H
 
-#include "Object3D.h"
-#include "Vectors.h"
+#include "entities/Object3D.h"
+#include "utils/Vectors.h"
 
 typedef struct {
     Object3D object; // Object3D contains the basic properties like type, data, etc.

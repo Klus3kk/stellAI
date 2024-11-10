@@ -1,9 +1,9 @@
-#include "actions.h"
-#include "ObjectManager.h"
-#include "Camera.h"
-#include "globals.h"
-#include "SceneObject.h"
-#include "ModelLoad.h"
+#include "gui/actions.h"
+#include "resources/ObjectManager.h"
+#include "entities/Camera.h"
+#include "core/globals.h"
+#include "entities/SceneObject.h"
+#include "resources/ModelLoad.h"
 #include <string.h>
 
 // Define the stacks for undo and redo

@@ -1,4 +1,4 @@
-#include "ModelLoad.h"
+#include "resources/ModelLoad.h"
 
 Mesh processMesh(struct aiMesh* mesh, const struct aiScene* scene) {
     Mesh newMesh = { 0 };

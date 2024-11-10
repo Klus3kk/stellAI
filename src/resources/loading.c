@@ -1,6 +1,6 @@
-#include "loading.h"
-#include "globals.h"
-#include "Vectors.h"
+#include "utils/loading.h"
+#include "core/globals.h"
+#include "utils/Vectors.h"
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 

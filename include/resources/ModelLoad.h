@@ -1,7 +1,7 @@
 #ifndef MODELLOAD_H
 #define MODELLOAD_H
 
-#include "Vectors.h"
+#include "utils/Vectors.h"
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

@@ -3,11 +3,11 @@
 
 #include <stdbool.h>
 #include <GLFW/glfw3.h>
-#include "globals.h"
+#include "core/globals.h"
 #include <glad/glad.h>
-#include "ObjectManager.h"
-#include "SceneObject.h"
-#include "ModelLoad.h"
+#include "resources/ObjectManager.h"
+#include "entities/SceneObject.h"
+#include "resources/ModelLoad.h"
 #define MAX_VERTEX_BUFFER 1024 * 1024
 #define MAX_ELEMENT_BUFFER 1024 * 1024
 

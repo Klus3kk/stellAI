@@ -27,15 +27,15 @@
 #include "nuklear/nuklear_glfw_gl3.h"
 
 // Project headers
-#include "gui.h"
-#include "globals.h"
-#include "ObjectManager.h"
-#include "resource_loader.h"
-#include "textures.h"
-#include "lightshading.h"
-#include "file_operations.h"
-#include "background.h"
-#include "actions.h"
+#include "gui/gui.h"
+#include "core/globals.h"
+#include "resources/ObjectManager.h"
+#include "resources/resource_loader.h"
+#include "resources/textures.h"
+#include "graphics/lightshading.h"
+#include "file_operations/file_operations.h"
+#include "graphics/background.h"
+#include "gui/actions.h"
 
 extern int textureCount;
 extern int materialCount;

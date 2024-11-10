@@ -3,7 +3,7 @@
 #ifndef ACTIONS_H
 #define ACTIONS_H
 
-#include "SceneObject.h"
+#include "entities/SceneObject.h"
 
 #define MAX_ACTIONS 100
 

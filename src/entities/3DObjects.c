@@ -1,10 +1,10 @@
-#include "3DObjects.h"
+#include "entities/3DObjects.h"
 #include <glad/glad.h>  
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "Vectors.h"
-#include "Camera.h"
+#include "utils/Vectors.h"
+#include "entities/Camera.h"
 
 #define PI 3.14159265358979323846
 

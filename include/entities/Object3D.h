@@ -1,10 +1,10 @@
 #ifndef OBJECT3D_H
 #define OBJECT3D_H
 
-#include "Vectors.h"
-#include "materials.h"
-#include "3DObjects.h"
-#include "ModelLoad.h"
+#include "utils/Vectors.h"
+#include "resources/materials.h"
+#include "entities/3DObjects.h"
+#include "resources/ModelLoad.h"
 
 typedef enum {
     OBJ_CUBE,

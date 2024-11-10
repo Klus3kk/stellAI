@@ -1,8 +1,8 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#include "Vectors.h"
-#include "Camera.h"
+#include "utils/Vectors.h"
+#include "entities/Camera.h"
 #include "SOIL2/SOIL2.h"
 extern Camera camera;  // If the camera is globally accessible
 extern Matrix4x4 projMatrix;  // If the projMatrix is globally accessible

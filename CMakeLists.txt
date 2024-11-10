@@ -26,6 +26,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(GLAD)
 
+# Fetch GLEW
+FetchContent_Declare(
+    GLEW
+    GIT_REPOSITORY https://github.com/nigels-com/glew.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(GLEW)
+
 # Fetch SOIL2 for image loading
 FetchContent_Declare(
     SOIL2
@@ -41,6 +49,36 @@ FetchContent_Declare(
     GIT_TAG master
 )
 FetchContent_MakeAvailable(cJSON)
+
+# Fetch Assimp for model loading
+FetchContent_Declare(
+    Assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(Assimp)
+
+# Fetch tinyfiledialogs for file dialogs
+FetchContent_Declare(
+    tinyfiledialogs
+    GIT_REPOSITORY https://git.code.sf.net/p/tinyfiledialogs/code
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(tinyfiledialogs)
+
+# Add Nuklear (assuming it's locally included in the project)
+add_library(nuklear STATIC
+    nuklear/nuklear.h
+    nuklear/nuklear_glfw_gl3.h
+)
+
+# Add ODE if it’s downloaded locally; otherwise, add a fetch command
+FetchContent_Declare(
+    ODE
+    GIT_REPOSITORY https://github.com/odedevs/ode.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(ODE)
 
 # Add include directories for project headers
 include_directories(
@@ -64,8 +102,13 @@ add_executable(StellAI ${SOURCES})
 target_link_libraries(StellAI
     glfw
     glad
+    glew             # Link GLEW
     SOIL2
     cjson
+    assimp           # Linking Assimp for model loading
+    nuklear          # Linking Nuklear for GUI
+    ode              # Linking Open Dynamics Engine for physics
+    tinyfiledialogs  # Linking tinyfiledialogs for file dialogs
 )
 
 # Platform-specific settings (e.g., Windows, Linux, macOS)
@@ -80,5 +123,14 @@ elseif (UNIX)
     target_link_libraries(StellAI GL X11 pthread Xrandr Xi dl)  # Link necessary libraries on Linux
 endif()
 
-# Additional configuration to ensure GLFW, GLAD, SOIL2, and cJSON are properly linked
-target_include_directories(StellAI PRIVATE ${GLFW_INCLUDE_DIRS} ${GLAD_INCLUDE_DIRS} ${SOIL2_INCLUDE_DIRS} ${CJSON_INCLUDE_DIRS})
+# Additional configuration to ensure all libraries are properly linked
+target_include_directories(StellAI PRIVATE 
+    ${GLFW_INCLUDE_DIRS} 
+    ${GLAD_INCLUDE_DIRS} 
+    ${GLEW_INCLUDE_DIRS} 
+    ${SOIL2_INCLUDE_DIRS} 
+    ${CJSON_INCLUDE_DIRS} 
+    ${ASSIMP_INCLUDE_DIRS} 
+    ${ODE_INCLUDE_DIRS} 
+    ${TINYFILEDIALOGS_INCLUDE_DIRS}
+)

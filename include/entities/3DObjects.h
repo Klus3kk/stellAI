@@ -1,7 +1,7 @@
 #pragma once
 #include <GLFW/glfw3.h>
 #include <stdbool.h>
-#include "Vectors.h"
+#include "utils/Vectors.h"
 typedef struct {
     GLuint vao; // Vertex Array Object ID
     GLuint vbo; // Vertex Buffer Object ID

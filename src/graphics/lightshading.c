@@ -1,4 +1,4 @@
-#include "lightshading.h"
+#include "graphics/lightshading.h"
 #include <glad/glad.h>
 #include <stdlib.h>
 #include <math.h>

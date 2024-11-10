@@ -1,9 +1,9 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
-#include "shaders.h"
-#include "textures.h"
-#include "Camera.h"
-#include "background.h"
+#include "graphics/shaders.h"
+#include "resources/textures.h"
+#include "entities/Camera.h"
+#include "graphics/background.h"
 #include "SOIL2/SOIL2.h"
 #include <stdio.h>
 GLuint skyboxVAO, skyboxVBO, skyboxShader, skyboxTexture;

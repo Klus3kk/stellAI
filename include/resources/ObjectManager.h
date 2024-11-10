@@ -1,12 +1,12 @@
 #ifndef OBJECT_MANAGER_H
 #define OBJECT_MANAGER_H
 
-#include "3DObjects.h"
-#include "Camera.h"
-#include "materials.h"
+#include "entities/3DObjects.h"
+#include "entites/Camera.h"
+#include "resources/materials.h"
 #include <stdbool.h>
-#include "Vectors.h"
-#include "SceneObject.h"
+#include "utils/Vectors.h"
+#include "entities/SceneObject.h"
 
 #define MAX_OBJECTS 1000
 
