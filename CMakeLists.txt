@@ -10,6 +10,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Enable FetchContent for downloading external dependencies
 include(FetchContent)
 
+# Disable all uninstall targets to avoid conflicts
+set(CMAKE_SKIP_INSTALL_RULES ON)
+
 # Fetch GLFW
 FetchContent_Declare(
     GLFW
@@ -18,11 +21,19 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(GLFW)
 
+# Fetch cJSON for JSON parsing with a specific tag for stability
+FetchContent_Declare(
+    cJSON
+    GIT_REPOSITORY https://github.com/DaveGamble/cJSON.git
+    GIT_TAG v1.7.14  # Use a specific stable tag instead of 'master'
+)
+FetchContent_MakeAvailable(cJSON)
+
 # Fetch GLAD
 FetchContent_Declare(
     GLAD
     GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-    GIT_TAG main
+    GIT_TAG v2.0.6  # Use a specific tag instead of 'main'
 )
 FetchContent_MakeAvailable(GLAD)
 
@@ -41,14 +52,6 @@ FetchContent_Declare(
     GIT_TAG master
 )
 FetchContent_MakeAvailable(SOIL2)
-
-# Fetch cJSON for JSON parsing
-FetchContent_Declare(
-    cJSON
-    GIT_REPOSITORY https://github.com/DaveGamble/cJSON.git
-    GIT_TAG master
-)
-FetchContent_MakeAvailable(cJSON)
 
 # Fetch Assimp for model loading
 FetchContent_Declare(
