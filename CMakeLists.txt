@@ -70,12 +70,19 @@ add_executable(StellAI ${SOURCES})
 
 # Link libraries
 target_link_libraries(StellAI
-    glfw
-    glew             # Link GLEW
-    SOIL2
-    assimp           # Link Assimp for model loading
-    tinyfiledialogs  # Link tinyfiledialogs for file dialogs
+    glfw             # GLFW for windowing
+    glew             # GLEW for OpenGL extension loading
+    SOIL2            # SOIL2 for image loading
+    assimp           # Assimp for model loading
+    tinyfiledialogs  # tinyfiledialogs for file dialogs
+    GL               # OpenGL library on Linux
+    X11              # Required for GLFW on Linux
+    pthread          # POSIX thread library
+    Xrandr           # Required for GLFW on Linux
+    Xi               # Required for GLFW on Linux
+    dl               # Dynamic loading library
 )
+
 
 # Explicitly specify the include directories
 target_include_directories(StellAI PRIVATE 
@@ -101,4 +108,11 @@ elseif (APPLE)
     target_link_libraries(StellAI ${COCOA_LIBRARY} ${IOKIT_LIBRARY} ${COREVIDEO_LIBRARY})
 elseif (UNIX)
     target_link_libraries(StellAI GL X11 pthread Xrandr Xi dl)  # Link necessary libraries on Linux
+endif()
+
+# Ensure Nuklear and GLFW integration is handled correctly
+if (EXISTS "${CMAKE_SOURCE_DIR}/external/nuklear/nuklear_glfw_gl3.h")
+    target_include_directories(StellAI PRIVATE ${CMAKE_SOURCE_DIR}/external/nuklear)
+else()
+    message(FATAL_ERROR "Nuklear GLFW integration header file nuklear_glfw_gl3.h not found!")
 endif()

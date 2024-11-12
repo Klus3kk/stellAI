@@ -4,7 +4,9 @@
 
 
 int main(void) {
-    ShowWindow(GetConsoleWindow(), SW_HIDE);  // Hide the console window on startup
+#ifdef _WIN32
+    ShowWindow(GetConsoleWindow(), SW_HIDE);  // Hide the console window on Windows startup
+#endif
     setup();  // Set up OpenGL context, load shaders, and other resources
 
     initLoadingScreen(screen.window);

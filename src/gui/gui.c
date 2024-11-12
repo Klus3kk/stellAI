@@ -4,6 +4,8 @@
 #include <float.h>
 #include <stdbool.h>
 #include <GLFW/glfw3.h>
+#define GLAD_GL_INVALID_INDEX
+#define GLAD_GL_TIMEOUT_IGNORED
 #include <glad/glad.h>
 
 // Assimp headers
@@ -13,6 +15,7 @@
 #include <assimp/postprocess.h>
 
 // Nuklear headers
+#define NK_IMPLEMENTATION
 #define NK_INCLUDE_FIXED_TYPES
 #define NK_INCLUDE_STANDARD_IO
 #define NK_INCLUDE_STANDARD_VARARGS
@@ -20,9 +23,13 @@
 #define NK_INCLUDE_VERTEX_BUFFER_OUTPUT
 #define NK_INCLUDE_FONT_BAKING
 #define NK_INCLUDE_DEFAULT_FONT
-#define NK_IMPLEMENTATION
+#define NK_INCLUDE_COMMAND_USERDATA
+#define NK_UINT_DRAW_INDEX
 #define NK_GLFW_GL3_IMPLEMENTATION
 #define NK_KEYSTATE_BASED_INPUT
+#define NK_MAX_NUMBER_BUFFER
+#define NK_BUFFER_DEFAULT_INITIAL_SIZE
+#define NK_INPUT_MAX
 #include "nuklear/nuklear.h"
 #include "nuklear/nuklear_glfw_gl3.h"
 
