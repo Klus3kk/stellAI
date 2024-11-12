@@ -2,7 +2,7 @@
 #define OBJECT_MANAGER_H
 
 #include "entities/3DObjects.h"
-#include "entites/Camera.h"
+#include "entities/Camera.h"
 #include "resources/materials.h"
 #include <stdbool.h>
 #include "utils/Vectors.h"

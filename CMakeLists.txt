@@ -1,13 +1,11 @@
-# CMakeLists.txt in the main StellAI directory
-
 cmake_minimum_required(VERSION 3.15)
 project(StellAI_3D_Engine)
 
-# Set C++ standard for future upgrades
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Enable FetchContent for other dependencies
+# Enable FetchContent for dependencies
 include(FetchContent)
 
 # Fetch GLFW
@@ -50,13 +48,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tinyfiledialogs)
 
-# Add cJSON source file directly to the project
+# Include cJSON and glad sources directly
 set(CJSON_SOURCES ${CMAKE_SOURCE_DIR}/external/cjson/cJSON.c)
+set(GLAD_SOURCES ${CMAKE_SOURCE_DIR}/external/glad/src/glad.c)
 
-# Add glad source file directly to the project
-set(GLAD_SOURCES ${CMAKE_SOURCE_DIR}/external/glad/glad.c)
-
-# Gather all other source files
+# Gather other source files
 file(GLOB_RECURSE SOURCES
     "src/core/*.c"
     "src/graphics/*.c"
@@ -66,10 +62,10 @@ file(GLOB_RECURSE SOURCES
     "src/utils/*.c"
 )
 
-# Include cJSON and GLAD source files with other sources
+# Include cJSON and GLAD sources with other sources
 list(APPEND SOURCES ${CJSON_SOURCES} ${GLAD_SOURCES})
 
-# Define the executable first
+# Define the executable
 add_executable(StellAI ${SOURCES})
 
 # Link libraries
@@ -77,22 +73,22 @@ target_link_libraries(StellAI
     glfw
     glew             # Link GLEW
     SOIL2
-    assimp           # Linking Assimp for model loading
-    tinyfiledialogs  # Linking tinyfiledialogs for file dialogs
+    assimp           # Link Assimp for model loading
+    tinyfiledialogs  # Link tinyfiledialogs for file dialogs
 )
 
-# Now specify include directories
+# Explicitly specify the include directories
 target_include_directories(StellAI PRIVATE 
-    ${CMAKE_SOURCE_DIR}/external/glad          # Explicitly add path to glad headers
-    ${CMAKE_SOURCE_DIR}/external/KHR           # Add path to KHR directory for khrplatform.h
+    ${CMAKE_SOURCE_DIR}/external/glad/include      # Path to glad headers
+    ${CMAKE_SOURCE_DIR}/external/glad/include/KHR  # Path to KHR headers for khrplatform.h
     ${GLFW_INCLUDE_DIRS}
     ${GLEW_INCLUDE_DIRS}
     ${SOIL2_INCLUDE_DIRS}
     ${ASSIMP_INCLUDE_DIRS}
     ${TINYFILEDIALOGS_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/include                # Project's include directory
-    ${CMAKE_SOURCE_DIR}/external/nuklear       # Nuklear as a header-only library
-    ${CMAKE_SOURCE_DIR}/external/cjson         # cJSON include directory
+    ${CMAKE_SOURCE_DIR}/include                    # Project's include directory
+    ${CMAKE_SOURCE_DIR}/external/nuklear           # Nuklear as a header-only library
+    ${CMAKE_SOURCE_DIR}/external/cjson             # cJSON include directory
 )
 
 # Platform-specific settings (e.g., Windows, Linux, macOS)

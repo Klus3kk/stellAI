@@ -13,7 +13,7 @@
 #include "entities/Camera.h"
 #include "resources/ObjectManager.h"
 #include "gui/gui.h"
-#define MAX_OBJECTS 250
+#define MAX_OBJECTS 1000
 
 typedef enum {
     SELECT_NONE,
