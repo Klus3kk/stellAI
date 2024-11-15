@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <GLFW/glfw3.h>
 #include "core/globals.h"
+#undef GL_INVALID_INDEX
+#undef GL_TIMEOUT_IGNORED
 #include <glad/glad.h>
 #include "resources/ObjectManager.h"
 #include "entities/SceneObject.h"
@@ -15,6 +17,7 @@ extern SceneObject scene_objects[MAX_OBJECTS];
 extern int num_scene_objects;
 extern GLuint textureColorbuffer;
 const char* objectTypeName(ObjectType type);
+
 
 extern GLFWwindow* window;
 extern bool theme_dark;
@@ -31,8 +34,10 @@ void resize_callback(GLFWwindow* window, int width, int height);
 void teardown_nuklear();
 void toggle_object_property(SceneObject* obj, const char* property);
 void render_nuklear();
+struct nk_context; 
+struct nk_context* get_nk_context();
 void run_loading_screen(GLFWwindow* window, struct nk_context* ctx);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-struct nk_context* get_nk_context();
+
 
 #endif 

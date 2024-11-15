@@ -5,6 +5,8 @@
 #include <assimp/cimport.h>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#undef GL_INVALID_INDEX
+#undef GL_TIMEOUT_IGNORED
 #include <glad/glad.h>
 #include <stdio.h>
 #include <stdlib.h>

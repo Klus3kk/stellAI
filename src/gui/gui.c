@@ -30,8 +30,8 @@
 #define NK_MAX_NUMBER_BUFFER
 #define NK_BUFFER_DEFAULT_INITIAL_SIZE
 #define NK_INPUT_MAX
-#include "nuklear/nuklear.h"
-#include "nuklear/nuklear_glfw_gl3.h"
+#include "nuklear.h"
+#include "nuklear_glfw_gl3.h"
 
 // Project headers
 #include "gui/gui.h"

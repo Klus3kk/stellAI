@@ -2,7 +2,6 @@
 #include "graphics/rendering.h"
 #include "core/globals.h"
 
-
 int main(void) {
 #ifdef _WIN32
     ShowWindow(GetConsoleWindow(), SW_HIDE);  // Hide the console window on Windows startup

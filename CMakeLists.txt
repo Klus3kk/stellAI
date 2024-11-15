@@ -48,7 +48,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(tinyfiledialogs)
 
-# Include cJSON and glad sources directly
+# Include cJSON, glad sources directly
 set(CJSON_SOURCES ${CMAKE_SOURCE_DIR}/external/cjson/cJSON.c)
 set(GLAD_SOURCES ${CMAKE_SOURCE_DIR}/external/glad/src/glad.c)
 
@@ -62,8 +62,8 @@ file(GLOB_RECURSE SOURCES
     "src/utils/*.c"
 )
 
-# Include cJSON and GLAD sources with other sources
-list(APPEND SOURCES ${CJSON_SOURCES} ${GLAD_SOURCES})
+# Include cJSON, GLAD, nuklear sources with other sources
+list(APPEND SOURCES ${CJSON_SOURCES} ${GLAD_SOURCES} ${NUKLEAR_SOURCES})
 
 # Define the executable
 add_executable(StellAI ${SOURCES})
