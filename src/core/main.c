@@ -1,24 +1,26 @@
-#include "gui/gui.h"
-#include "graphics/rendering.h"
-#include "core/globals.h"
+#include "gui.h"
+#include "rendering.h"
+#include "globals.h"
 
 int main(void) {
-#ifdef _WIN32
-    ShowWindow(GetConsoleWindow(), SW_HIDE);  // Hide the console window on Windows startup
-#endif
+    #ifdef _WIN32
+        #include <windows.h>
+        ShowWindow(GetConsoleWindow(), SW_HIDE);  // Hide console only on Windows
+    #endif
+
     setup();  // Set up OpenGL context, load shaders, and other resources
 
     initLoadingScreen(screen.window);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear buffers to set initial background
     glfwSwapBuffers(screen.window);  // Display the initial cleared screen
-    run_loading_screen(screen.window, get_nk_context());  // Display and run the loading screen
+    run_loading_screen(screen.window);  // Display and run the loading screen
     glfwSetKeyCallback(screen.window, key_callback);  // Set key callbacks for user input
     glfwSetFramebufferSizeCallback(screen.window, framebuffer_size_callback); // Handle window resizing
 
     while (!glfwWindowShouldClose(screen.window)) {
         glfwPollEvents();  // Handle GLFW events such as input and window actions
 
-        nk_glfw3_new_frame();  // Start a new GUI frame
+        generate_new_frame();
 
         if (isRunning) {
             update(calculateDeltaTime());  // Update game logic only if the simulation is running
@@ -38,7 +40,3 @@ int main(void) {
     end();  // Clean up OpenGL and other resources
     return 0;
 }
-
-
-
-

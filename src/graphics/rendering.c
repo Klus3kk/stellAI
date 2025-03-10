@@ -1,14 +1,14 @@
-#include "graphics/rendering.h"
-#include "entities/Screen.h"
-#include "entities/Camera.h"
-#include "resources/ObjectManager.h"
-#include "graphics/shaders.h"
-#include "resources/textures.h"
-#include "graphics/lightshading.h"
-#include "graphics/background.h"
-#include "core/globals.h"
-#include "resources/materials.h"
-#include "gui/gui.h"
+#include "rendering.h"
+#include "Screen.h"
+#include "Camera.h"
+#include "ObjectManager.h"
+#include "shaders.h"
+#include "textures.h"
+#include "lightshading.h"
+#include "background.h"
+#include "globals.h"
+#include "materials.h"
+#include "gui.h"
 
 // Function prototypes
 static Model* model = NULL;
@@ -44,7 +44,7 @@ void loadResources(int stage, float* progress) {
 }
 
 void setup() {
-    strcpy_s(screen.title, 100, "C1ue Engine v1.0.0");
+    strncpy(screen.title, "C1ue Engine v1.1.0", sizeof(screen.title) - 1);
 
     if (!glfwInit()) {
         fprintf(stderr, "Failed to initialize GLFW\n");
@@ -113,6 +113,9 @@ void setup() {
 
     // Disable face culling to ensure all faces are rendered
     glDisable(GL_CULL_FACE);
+
+        printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
+    printf("GLSL Version: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 }
 
 void drawMesh(const Mesh* mesh) {
