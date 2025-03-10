@@ -144,18 +144,6 @@ file(GLOB C_SOURCES src/*.c src/*/*.c)
 file(GLOB CPP_SOURCES src/*.cpp src/*/*.cpp)
 file(GLOB HEADERS include/*.h include/*.hpp)
 
-# Add ImGui bridge source files
-set(IMGUI_BRIDGE_SOURCES
-    src/imgui_bridge.cpp
-)
-
-# Add StellAI source files
-set(STELLAI_SOURCES
-    src/StellAI.cpp
-    src/StellAI_GUI.cpp
-    src/StellAI_Integration.cpp
-)
-
 # Ensure `add_executable` is declared BEFORE linking libraries
 add_executable(StellAI 
     ${C_SOURCES} 

@@ -1,9 +1,6 @@
 /**
  * @file StellAI.hpp
- * @brief Core header file for StellAI engine
- * 
- * This header defines the main components of the StellAI engine,
- * which extends the ClueEngine with AI-driven capabilities.
+ * @brief C++ API for the StellAI engine
  */
 
  #ifndef STELLAI_HPP
@@ -12,27 +9,21 @@
  #include <string>
  #include <vector>
  #include <memory>
- #include <functional>
- #include <unordered_map>
- #include <mutex>
+ #include <map>
+ #include <tuple>
  
- // Forward declarations for C components from ClueEngine
- extern "C" {
-     struct Camera;
-     struct SceneObject;
-     struct PBRMaterial;
-     struct Model;
-     struct Vector3;
-     struct Vector4;
-     struct Matrix4x4;
- }
+ // Forward declarations for ClueEngine types
+ struct Model;
+ struct PBRMaterial;
+ struct Vector3;
  
  namespace StellAI {
  
  /**
-  * @brief Version information for StellAI
+  * StellAI version information
   */
- struct Version {
+ class Version {
+ public:
      static constexpr int MAJOR = 0;
      static constexpr int MINOR = 1;
      static constexpr int PATCH = 0;
@@ -45,104 +36,24 @@
  };
  
  /**
-  * @brief Base class for all AI models in StellAI
+  * World generation module
   */
- class AIModel {
- public:
-     virtual ~AIModel() = default;
-     
-     /**
-      * @brief Load an AI model from a file
-      * @param path Path to the model file
-      * @return true if loaded successfully, false otherwise
-      */
-     virtual bool loadFromFile(const std::string& path) = 0;
-     
-     /**
-      * @brief Check if the model is loaded and ready
-      * @return true if ready, false otherwise
-      */
-     virtual bool isReady() const = 0;
-     
-     /**
-      * @brief Get the name of the model
-      * @return Model name
-      */
-     virtual std::string getName() const = 0;
-     
-     /**
-      * @brief Get the type of the model
-      * @return Model type as string
-      */
-     virtual std::string getType() const = 0;
- };
- 
- /**
-  * @brief Manager for AI models
-  */
- class AIModelManager {
- public:
-     static AIModelManager& getInstance() {
-         static AIModelManager instance;
-         return instance;
-     }
-     
-     /**
-      * @brief Register a new AI model
-      * @param name Name to register the model under
-      * @param model Shared pointer to the model
-      * @return true if registered successfully, false otherwise
-      */
-     bool registerModel(const std::string& name, std::shared_ptr<AIModel> model) {
-         std::lock_guard<std::mutex> lock(modelsMutex);
-         if (models.find(name) != models.end()) {
-             return false; // Model with this name already exists
-         }
-         models[name] = model;
-         return true;
-     }
-     
-     /**
-      * @brief Get a model by name
-      * @param name Name of the model to retrieve
-      * @return Shared pointer to the model, or nullptr if not found
-      */
-     std::shared_ptr<AIModel> getModel(const std::string& name) {
-         std::lock_guard<std::mutex> lock(modelsMutex);
-         auto it = models.find(name);
-         if (it != models.end()) {
-             return it->second;
-         }
-         return nullptr;
-     }
- 
- private:
-     AIModelManager() = default;
-     ~AIModelManager() = default;
-     
-     AIModelManager(const AIModelManager&) = delete;
-     AIModelManager& operator=(const AIModelManager&) = delete;
-     
-     std::unordered_map<std::string, std::shared_ptr<AIModel>> models;
-     std::mutex modelsMutex;
- };
- 
  namespace WorldGen {
  
  /**
-  * @brief Parameters for procedural terrain generation
+  * Parameters for terrain generation
   */
  struct TerrainParams {
-     float scale = 1.0f;
-     float roughness = 0.5f;
-     float amplitude = 10.0f;
-     int octaves = 4;
-     int seed = 12345;
-     Vector3 position = {0.0f, 0.0f, 0.0f};
+     float scale;
+     float roughness;
+     float amplitude;
+     int octaves;
+     int seed;
+     Vector3 position;
  };
  
  /**
-  * @brief Generator for procedural terrain
+  * Terrain generator component
   */
  class TerrainGenerator {
  public:
@@ -150,38 +61,41 @@
      ~TerrainGenerator();
      
      /**
-      * @brief Generate a terrain mesh
-      * @param params Parameters for terrain generation
-      * @return Pointer to the generated Model, or nullptr on failure
+      * Generate terrain using the specified parameters
+      * @param params Generation parameters
+      * @return Generated terrain model
       */
      Model* generateTerrain(const TerrainParams& params);
      
      /**
-      * @brief Apply biomes to a terrain based on AI analysis
-      * @param terrain Terrain to apply biomes to
-      * @param aiModelName Name of the AI model to use for biome classification
-      * @return true if successful, false otherwise
+      * Apply biomes to an existing terrain using AI
+      * @param terrain The terrain model to modify
+      * @param aiModelName Name of the AI model to use
+      * @return True if successful
       */
      bool applyBiomes(Model* terrain, const std::string& aiModelName);
  };
  
  } // namespace WorldGen
  
+ /**
+  * Model generation module
+  */
  namespace ModelGen {
  
  /**
-  * @brief Parameters for AI-driven model generation
+  * Parameters for model generation
   */
  struct ModelGenParams {
-     std::string prompt;        // Text description of the model to generate
-     float complexity = 0.5f;   // How complex the model should be (0.0-1.0)
-     int resolution = 32;       // Resolution of generated model
-     bool texturing = true;     // Whether to generate textures
-     Vector3 size = {1.0f, 1.0f, 1.0f}; // Size of the model
+     std::string prompt;
+     float complexity;
+     int resolution;
+     bool texturing;
+     Vector3 size;
  };
  
  /**
-  * @brief Generator for AI-created 3D models
+  * Model generator component
   */
  class ModelGenerator {
  public:
@@ -189,36 +103,39 @@
      ~ModelGenerator();
      
      /**
-      * @brief Generate a 3D model from text description
-      * @param params Parameters for model generation
-      * @return Pointer to the generated Model, or nullptr on failure
+      * Generate a 3D model from a text description
+      * @param params Generation parameters
+      * @return Generated model
       */
      Model* generateFromText(const ModelGenParams& params);
      
      /**
-      * @brief Generate PBR materials for a model
-      * @param model Model to generate materials for
+      * Generate a PBR material for a model
+      * @param model The model to generate material for
       * @param description Text description of the desired material
-      * @return Generated PBR material
+      * @return Generated material
       */
      PBRMaterial generateMaterial(Model* model, const std::string& description);
  };
  
  } // namespace ModelGen
  
+ /**
+  * Shader generation module
+  */
  namespace ShaderGen {
  
  /**
-  * @brief Parameters for shader generation
+  * Parameters for shader generation
   */
  struct ShaderGenParams {
-     std::string effect;        // Desired visual effect
-     std::vector<std::string> features; // Shader features to include
-     bool optimizeForPerformance = false; // Whether to optimize for performance over quality
+     std::string effect;
+     bool optimizeForPerformance;
+     std::vector<std::string> features;
  };
  
  /**
-  * @brief Generator for AI-driven shaders
+  * Shader generator component
   */
  class ShaderGenerator {
  public:
@@ -226,81 +143,92 @@
      ~ShaderGenerator();
      
      /**
-      * @brief Generate shader code based on parameters
-      * @param params Parameters for shader generation
+      * Generate vertex and fragment shaders from a description
+      * @param params Generation parameters
       * @return Pair of vertex and fragment shader code
       */
-     std::pair<std::string, std::string> generateShader(const ShaderGenParams& params);
+     std::tuple<std::string, std::string> generateShader(const ShaderGenParams& params);
      
      /**
-      * @brief Optimize existing shader code using AI
-      * @param vertexShader Vertex shader code to optimize
-      * @param fragmentShader Fragment shader code to optimize
-      * @return Optimized shader code
+      * Optimize existing shaders
+      * @param vertexShader Existing vertex shader code
+      * @param fragmentShader Existing fragment shader code
+      * @return Pair of optimized vertex and fragment shader code
       */
-     std::pair<std::string, std::string> optimizeShader(
+     std::tuple<std::string, std::string> optimizeShader(
          const std::string& vertexShader, 
-         const std::string& fragmentShader
-     );
+         const std::string& fragmentShader);
  };
  
  } // namespace ShaderGen
  
  /**
-  * @brief Main interface for StellAI engine
+  * Main StellAI engine singleton
   */
  class Engine {
+ private:
+     bool initialized;
+     bool aiEnabled;
+     
+     // Components
+     WorldGen::TerrainGenerator terrainGenerator;
+     ModelGen::ModelGenerator modelGenerator;
+     ShaderGen::ShaderGenerator shaderGenerator;
+     
+     // Private constructor for singleton
+     Engine() : initialized(false), aiEnabled(false) {}
+     
  public:
+     // Delete copy constructor and assignment operator
+     Engine(const Engine&) = delete;
+     Engine& operator=(const Engine&) = delete;
+     
+     /**
+      * Get the singleton instance
+      */
      static Engine& getInstance() {
          static Engine instance;
          return instance;
      }
      
      /**
-      * @brief Initialize the StellAI engine
+      * Initialize the engine
       * @param enableAI Whether to enable AI features
-      * @return true if initialized successfully, false otherwise
+      * @return True if initialization succeeded
       */
-     bool initialize(bool enableAI = true);
+     bool initialize(bool enableAI);
      
      /**
-      * @brief Shut down the StellAI engine
+      * Shutdown the engine and free resources
       */
      void shutdown();
      
      /**
-      * @brief Get the WorldGen module
-      * @return Reference to the WorldGen::TerrainGenerator
+      * Check if the engine is initialized
+      */
+     bool isInitialized() const { return initialized; }
+     
+     /**
+      * Check if AI features are enabled
+      */
+     bool isAIEnabled() const { return aiEnabled; }
+     
+     /**
+      * Get the terrain generator component
       */
      WorldGen::TerrainGenerator& getWorldGen() { return terrainGenerator; }
      
      /**
-      * @brief Get the ModelGen module
-      * @return Reference to the ModelGen::ModelGenerator
+      * Get the model generator component
       */
      ModelGen::ModelGenerator& getModelGen() { return modelGenerator; }
      
      /**
-      * @brief Get the ShaderGen module
-      * @return Reference to the ShaderGen::ShaderGenerator
+      * Get the shader generator component
       */
      ShaderGen::ShaderGenerator& getShaderGen() { return shaderGenerator; }
-     
- private:
-     Engine() = default;
-     ~Engine() = default;
-     
-     Engine(const Engine&) = delete;
-     Engine& operator=(const Engine&) = delete;
-     
-     bool initialized = false;
-     bool aiEnabled = false;
-     
-     WorldGen::TerrainGenerator terrainGenerator;
-     ModelGen::ModelGenerator modelGenerator;
-     ShaderGen::ShaderGenerator shaderGenerator;
  };
  
  } // namespace StellAI
  
- #endif // STELLAI_HPP
+ #endif /* STELLAI_HPP */
