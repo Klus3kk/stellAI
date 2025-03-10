@@ -1,5 +1,5 @@
 ﻿cmake_minimum_required(VERSION 3.16)
-project(ClueEngine)
+project(StellAI)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -77,6 +77,33 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(soil2)
 include_directories(${soil2_SOURCE_DIR}/src)
 
+# imgui
+FetchContent_Declare(
+  imgui
+  GIT_REPOSITORY https://github.com/ocornut/imgui.git
+  GIT_TAG        docking
+)
+FetchContent_GetProperties(imgui)
+if(NOT imgui_POPULATED)
+    FetchContent_Populate(imgui)
+    # Create ImGui library
+    add_library(imgui STATIC
+        ${imgui_SOURCE_DIR}/imgui.cpp
+        ${imgui_SOURCE_DIR}/imgui_demo.cpp
+        ${imgui_SOURCE_DIR}/imgui_draw.cpp
+        ${imgui_SOURCE_DIR}/imgui_tables.cpp
+        ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+    )
+    target_include_directories(imgui PUBLIC 
+        ${imgui_SOURCE_DIR}
+        ${imgui_SOURCE_DIR}/backends
+    )
+endif()
+include_directories(${imgui_SOURCE_DIR})
+include_directories(${imgui_SOURCE_DIR}/backends)
+
 # Find GLFW (Windows / Linux / MacOS)
 if (PLATFORM_LINUX OR PLATFORM_MACOS)
     find_package(PkgConfig REQUIRED)
@@ -113,15 +140,34 @@ include_directories(
 )
 
 # Source files
-file(GLOB_RECURSE SOURCES src/*.c src/*.cpp)
-file(GLOB_RECURSE HEADERS include/*.h include/*.hpp)
+file(GLOB C_SOURCES src/*.c src/*/*.c)
+file(GLOB CPP_SOURCES src/*.cpp src/*/*.cpp)
+file(GLOB HEADERS include/*.h include/*.hpp)
+
+# Add ImGui bridge source files
+set(IMGUI_BRIDGE_SOURCES
+    src/imgui_bridge.cpp
+)
+
+# Add StellAI source files
+set(STELLAI_SOURCES
+    src/StellAI.cpp
+    src/StellAI_GUI.cpp
+    src/StellAI_Integration.cpp
+)
 
 # Ensure `add_executable` is declared BEFORE linking libraries
-add_executable(ClueEngine ${SOURCES} ${HEADERS})
+add_executable(StellAI 
+    ${C_SOURCES} 
+    ${CPP_SOURCES} 
+    ${HEADERS} 
+    ${IMGUI_BRIDGE_SOURCES}
+    ${STELLAI_SOURCES}
+)
 
 # Properly link libraries for **each platform**
 if (PLATFORM_WINDOWS)
-    target_link_libraries(ClueEngine
+    target_link_libraries(StellAI
         OpenGL::GL
         ${CMAKE_SOURCE_DIR}/lib/glfw3.lib
         ${CMAKE_SOURCE_DIR}/lib/glew32s.lib
@@ -131,16 +177,19 @@ if (PLATFORM_WINDOWS)
         ${CMAKE_SOURCE_DIR}/lib/cjson.lib
         ${CMAKE_SOURCE_DIR}/lib/tinyfiledialogs32.lib
         ${CMAKE_SOURCE_DIR}/lib/tinyfiledialogs64.lib
+        imgui
     )
 elseif (PLATFORM_MACOS)
     find_library(COCOA_FRAMEWORK Cocoa)
     find_library(IOKIT_FRAMEWORK IOKit)
     find_library(COREVIDEO_FRAMEWORK CoreVideo)      
-    target_link_libraries(ClueEngine
+    target_link_libraries(StellAI
         OpenGL::GL
         glfw
         GLEW
         assimp
+        soil2
+        imgui
         ${COCOA_FRAMEWORK}
         ${IOKIT_FRAMEWORK}
         ${COREVIDEO_FRAMEWORK}
@@ -149,7 +198,7 @@ elseif (PLATFORM_LINUX)
     find_package(glfw3 REQUIRED)
     find_package(GLEW REQUIRED)
     find_package(assimp REQUIRED)
-    target_link_libraries(ClueEngine
+    target_link_libraries(StellAI
         OpenGL::GL
         glfw
         ${GLFW_LIBRARIES}
@@ -158,6 +207,7 @@ elseif (PLATFORM_LINUX)
         soil2
         cjson
         tinyfiledialogs
+        imgui
         m   
         pthread
         dl
@@ -166,31 +216,31 @@ endif()
 
 # Copy DLLs (Windows only)
 if (PLATFORM_WINDOWS)
-    add_custom_command(TARGET ClueEngine POST_BUILD  
+    add_custom_command(TARGET StellAI POST_BUILD  
         COMMAND ${CMAKE_COMMAND} -E copy_directory   
         ${CMAKE_SOURCE_DIR}/external ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
     )
 endif()
 
 # Copy shaders and resources
-add_custom_command(TARGET ClueEngine POST_BUILD      
+add_custom_command(TARGET StellAI POST_BUILD      
     COMMAND ${CMAKE_COMMAND} -E copy_directory       
     ${CMAKE_SOURCE_DIR}/shaders ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/shaders
 )
 
-add_custom_command(TARGET ClueEngine POST_BUILD      
+add_custom_command(TARGET StellAI POST_BUILD      
     COMMAND ${CMAKE_COMMAND} -E copy_directory       
     ${CMAKE_SOURCE_DIR}/resources ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/resources
 )
 
 # Set working directory in Visual Studio
 if (PLATFORM_WINDOWS)
-    set_target_properties(ClueEngine PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")  
+    set_target_properties(StellAI PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")  
 endif()
 
 # Compiler settings
 if (MSVC)
-    target_compile_options(ClueEngine PRIVATE /W4)   
+    target_compile_options(StellAI PRIVATE /W4)   
 else()
-    target_compile_options(ClueEngine PRIVATE -Wall -Wextra -Wno-error)
+    target_compile_options(StellAI PRIVATE -Wall -Wextra -Wno-error)
 endif()

@@ -19,8 +19,8 @@
 #include <stdlib.h>  
 #include <stdbool.h>
 
-#define MAX_VERTEX_BUFFER 1024 * 1024
-#define MAX_ELEMENT_BUFFER 1024 * 1024
+// ImGui forward declarations
+struct ImGuiContext;
 
 extern SceneObject scene_objects[MAX_OBJECTS];
 extern int num_scene_objects;
@@ -31,20 +31,30 @@ extern GLFWwindow* window;
 extern bool theme_dark;
 extern bool show_about;
 extern bool is_fullscreen;
+extern bool show_stellai;  // Added for StellAI integration
 extern int windowed_x, windowed_y, windowed_width, windowed_height;
 
 void change_texture(SceneObject* obj);
-void setup_nuklear(GLFWwindow* existingWindow);
+void setup_imgui(GLFWwindow* existingWindow);  // Changed from setup_nuklear
 void set_theme(bool dark_theme);
 void toggle_theme();
 void reset_gui();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void main_gui();
 void resize_callback(GLFWwindow* window, int width, int height);
-void teardown_nuklear();
+void teardown_imgui();  // Changed from teardown_nuklear
 void toggle_object_property(SceneObject* obj, const char* property);
-void render_nuklear();
+void render_imgui();  // Changed from render_nuklear
 void run_loading_screen(GLFWwindow* window);
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void generate_new_frame();
-#endif 
+
+// StellAI extensions
+void initialize_stellai();
+void shutdown_stellai();
+bool is_stellai_initialized();
+bool is_stellai_enabled();
+void show_stellai_window(bool show);
+void toggle_stellai_window();
+
+#endif
