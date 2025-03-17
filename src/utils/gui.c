@@ -426,7 +426,7 @@ void run_loading_screen(GLFWwindow* window) {
         
         // Center the loading window
         bool open = true;
-        imgui_begin_window("Loading ClueEngine", &open, 0);
+        imgui_begin_window("Loading StellAI", &open, 0);
         
         imgui_text(stages[i]);
         
@@ -934,8 +934,8 @@ void render_settings_window() {
 void render_about_window() {
     if (show_about) {
         bool open = true;
-        if (imgui_begin_window("About ClueEngine", &show_about, 0)) {
-            imgui_text("ClueEngine v1.1.0");
+        if (imgui_begin_window("About StellAI", &show_about, 0)) {
+            imgui_text("StellAI v1.2.0");
             imgui_text("A 3D engine developed in C with OpenGL");
             imgui_separator();
             

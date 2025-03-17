@@ -7,20 +7,23 @@
 #include <iostream>
 #include <random>
 #include <ctime>
+#include <cstring>
+#include <cmath>
 
-// Include C headers from ClueEngine
-extern "C" {
-    struct Vector3;
-    struct PBRMaterial;
-    struct Model;
-}
+// Make sure we're not inside an extern "C" block before including Assimp
+#ifdef __cplusplus
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#endif
 
+// Include C headers from ClueEngine without extern "C" wrapper
+// to avoid conflicts with C++ templates in other libraries
 #include "materials.h"
 #include "ModelLoad.h"
 #include "Vectors.h"
 #include "Camera.h"
 #include "ObjectManager.h"
-
 
 namespace StellAI {
 
@@ -35,6 +38,11 @@ bool Engine::initialize(bool enableAI) {
     }
     
     std::cout << "Initializing StellAI Engine v" << Version::toString() << std::endl;
+    
+    // Initialize components
+    this->worldGen = new WorldGen::TerrainGenerator();
+    this->modelGen = new ModelGen::ModelGenerator();
+    this->shaderGen = new ShaderGen::ShaderGenerator();
     
     this->aiEnabled = enableAI;
     if (aiEnabled) {
@@ -58,7 +66,14 @@ void Engine::shutdown() {
     
     std::cout << "Shutting down StellAI Engine" << std::endl;
     
-    // Clean up any resources
+    // Clean up resources
+    delete worldGen;
+    delete modelGen;
+    delete shaderGen;
+    
+    worldGen = nullptr;
+    modelGen = nullptr;
+    shaderGen = nullptr;
     
     initialized = false;
 }
@@ -411,7 +426,12 @@ PBRMaterial ModelGenerator::generateMaterial(Model* model, const std::string& de
     // For now, we'll use a default material
     
     // Create a basic PBR material
-    PBRMaterial material;
+    PBRMaterial material = {};  // Use {} instead of {0}
+    material.albedoMap = 0;
+    material.normalMap = 0;
+    material.metallicMap = 0;
+    material.roughnessMap = 0;
+    material.aoMap = 0;
     
     // Use the first available material (typically "peacockOre" in ClueEngine)
     if (materialCount > 0) {
@@ -422,4 +442,113 @@ PBRMaterial ModelGenerator::generateMaterial(Model* model, const std::string& de
     return material;
 }
 
+} // namespace ModelGen
+
+//==============================
+// ShaderGen Implementation
+//==============================
+
+namespace ShaderGen {
+
+ShaderGenerator::ShaderGenerator() {
+    // Constructor implementation
 }
+
+ShaderGenerator::~ShaderGenerator() {
+    // Destructor implementation
+}
+
+std::pair<std::string, std::string> ShaderGenerator::generateShader(const ShaderGenParams& params) {
+    std::cout << "Generating shader for effect: \"" << params.effect << "\"" << std::endl;
+    
+    // In a real implementation, this would use AI to generate shader code based on the description
+    // For now, we'll return simple placeholder shaders
+    
+    std::string vertexShader = R"(
+        #version 330 core
+        layout (location = 0) in vec3 aPos;
+        layout (location = 1) in vec2 aTexCoord;
+        layout (location = 2) in vec3 aNormal;
+        
+        out vec3 FragPos;
+        out vec2 TexCoord;
+        out vec3 Normal;
+        
+        uniform mat4 model;
+        uniform mat4 view;
+        uniform mat4 projection;
+        
+        void main() {
+            FragPos = vec3(model * vec4(aPos, 1.0));
+            Normal = mat3(transpose(inverse(model))) * aNormal;
+            TexCoord = aTexCoord;
+            gl_Position = projection * view * vec4(FragPos, 1.0);
+        }
+    )";
+    
+    std::string fragmentShader = R"(
+        #version 330 core
+        out vec4 FragColor;
+        
+        in vec3 FragPos;
+        in vec2 TexCoord;
+        in vec3 Normal;
+        
+        uniform sampler2D texture1;
+        uniform vec3 viewPos;
+        uniform vec3 lightPos;
+        uniform vec3 lightColor;
+        
+        void main() {
+            // Ambient
+            float ambientStrength = 0.1;
+            vec3 ambient = ambientStrength * lightColor;
+            
+            // Diffuse
+            vec3 norm = normalize(Normal);
+            vec3 lightDir = normalize(lightPos - FragPos);
+            float diff = max(dot(norm, lightDir), 0.0);
+            vec3 diffuse = diff * lightColor;
+            
+            // Specular
+            float specularStrength = 0.5;
+            vec3 viewDir = normalize(viewPos - FragPos);
+            vec3 reflectDir = reflect(-lightDir, norm);
+            float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+            vec3 specular = specularStrength * spec * lightColor;
+            
+            vec3 result = (ambient + diffuse + specular) * texture(texture1, TexCoord).rgb;
+            FragColor = vec4(result, 1.0);
+        }
+    )";
+    
+    // Add any requested features from the params
+    for (const auto& feature : params.features) {
+        std::cout << "Adding feature: " << feature << std::endl;
+        // In a real implementation, this would modify the shader code to add the feature
+    }
+    
+    // Optimize for performance if requested
+    if (params.optimizeForPerformance) {
+        std::cout << "Optimizing shader for performance" << std::endl;
+        // In a real implementation, this would optimize the shader code
+    }
+    
+    return std::make_pair(vertexShader, fragmentShader);
+}
+
+std::pair<std::string, std::string> ShaderGenerator::optimizeShader(
+    const std::string& vertexShader, 
+    const std::string& fragmentShader)
+{
+    std::cout << "Optimizing shader..." << std::endl;
+    
+    // In a real implementation, this would analyze and optimize the shader code
+    // For now, we'll just return the original shaders
+    
+    return std::make_pair(vertexShader, fragmentShader);
+}
+
+} // namespace ShaderGen
+
+} // namespace StellAI
