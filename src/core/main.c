@@ -181,6 +181,7 @@ static void process_input(GLFWwindow* window, float deltaTime) {
     // Toggle debug overlay with F3
     static bool f3Pressed = false;
     if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS && !f3Pressed) {
+        extern bool show_debug;
         show_debug = !show_debug;
         f3Pressed = true;
     } else if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_RELEASE) {

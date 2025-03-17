@@ -82,7 +82,7 @@ void setup() {
         exit(EXIT_FAILURE);
     }
     glfwSwapInterval(1);
-    setup_nuklear(screen.window);
+    setup_imgui(screen.window);
 
     // Set up shaders and get uniform locations
     shaderProgram = loadShader("shaders/objects/vertex.glsl", "shaders/objects/fragment.glsl");

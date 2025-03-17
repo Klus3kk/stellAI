@@ -63,6 +63,13 @@ cmake -B build
 cmake --build build
 ```
 
+Faster compile:
+
+```bash
+cmake -B build -G Ninja
+ninja -C build
+```
+
 This will compile the source code and generate the **ClueEngine** executable in the `bin` directory.
 
 ### Step 3: Run the Engine

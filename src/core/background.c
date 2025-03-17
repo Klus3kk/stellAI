@@ -140,7 +140,7 @@ void drawSkybox(const Camera* camera, const Matrix4x4* projMatrix) {
     glUseProgram(skyboxShader);
 
     // Create a view matrix for the skybox (remove translation)
-    Matrix4x4 viewMatrixSkybox = getViewMatrix(camera);
+    Matrix4x4 viewMatrixSkybox = getViewMatrix((Camera*)camera);
     viewMatrixSkybox.data[3][0] = 0;
     viewMatrixSkybox.data[3][1] = 0;
     viewMatrixSkybox.data[3][2] = 0;
